@@ -171,6 +171,24 @@ def view_resume(id):
     return send_file(resume.file)
 
 
+@app.route("/delete-resume/<int:id>")
+def delete_resume(id):
+    # only admin should be able to delete
+    if session.get("role") != "admin":
+        return redirect("/")
+
+    resume = Resume.query.get(id)
+    if resume:
+        try:
+            if resume.file and os.path.exists(resume.file):
+                os.remove(resume.file)
+        except Exception:
+            pass
+        db.session.delete(resume)
+        db.session.commit()
+    return redirect("/admin")
+
+
 # ---------- LOGIC ---------- #
 
 def extract_text(file_path):
