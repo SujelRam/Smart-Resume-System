@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>User Dashboard</h3>
+
+<div class="card p-3 mb-3">
+<form method="POST" enctype="multipart/form-data">
+  <input class="form-control mb-2" type="file" name="resume">
+  <button class="btn btn-primary">Upload Resume</button>
+</form>
+</div>
+
+<h4>Your Applications</h4>
+
+{% for r in resumes %}
+<div class="card p-3 mb-2">
+  <p><b>Status:</b> 
+    <span class="badge bg-{% if r.status=='Matched' %}success{% else %}danger{% endif %}">
+      {{r.status}}
+    </span>
+  </p>
+</div>
+{% endfor %}
+
+{% endblock %}

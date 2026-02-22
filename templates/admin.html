@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h4>Admin Dashboard</h4>
+
+<div class="card p-3 shadow-sm mb-3">
+<form method="POST">
+  <input class="form-control mb-2" name="skills" placeholder="Add skills (python,sql)">
+  <button class="btn btn-success">Update Criteria</button>
+</form>
+
+{% if job %}
+<div class="mt-2">
+{% for s in job.skills_required.split(",") %}
+<span class="badge bg-primary me-1">
+  {{s}}
+  <a href="/delete-skill/{{s}}" style="color:white;">×</a>
+</span>
+{% endfor %}
+</div>
+{% endif %}
+</div>
+
+<a class="btn btn-outline-primary btn-sm" href="/admin">All</a>
+<a class="btn btn-outline-success btn-sm" href="/admin?filter=shortlisted">Shortlisted</a>
+
+<hr>
+
+{% for r in resumes %}
+<div class="card shadow-sm p-3 mb-2">
+
+<div class="d-flex justify-content-between">
+  <h6>Candidate #{{loop.index}}</h6>
+  <span class="badge bg-{% if r.status=='Matched' %}success{% else %}danger{% endif %}">
+    {{r.status}}
+  </span>
+</div>
+
+<p class="mb-1"><b>Email:</b>
+{% for u in users %}
+  {% if u.id == r.user_id %}
+    {{u.username}}
+  {% endif %}
+{% endfor %}
+</p>
+
+<a href="/view-resume/{{r.id}}" target="_blank" class="btn btn-dark btn-sm">View Resume</a>
+
+</div>
+{% endfor %}
+
+{% endblock %}

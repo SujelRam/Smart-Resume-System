@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card shadow mx-auto p-4" style="max-width:400px">
+<h3 class="text-center">Sign In</h3>
+
+<form method="POST">
+  <input class="form-control mb-3" name="username" placeholder="Username">
+  <input class="form-control mb-3" type="password" name="password" placeholder="Password">
+  <button class="btn btn-primary w-100">Login</button>
+</form>
+
+<a href="/register" class="text-center d-block mt-2">Create account</a>
+
+</div>
+
+{% endblock %}
