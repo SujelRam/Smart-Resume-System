@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h4 class="mb-3">Admin Dashboard</h4>
+<h4 class="mb-3 fw-bold">Admin Dashboard</h4>
 
-<!-- 🔹 Criteria Section -->
-<div class="card shadow-sm p-3 mb-3">
+<!-- 🔹 Job Criteria Section -->
+<div class="card shadow-sm p-3 mb-4">
   <h6 class="fw-bold mb-2">Set Job Criteria</h6>
 
   <form method="POST">
@@ -14,17 +14,21 @@
 
   {% if job %}
   <div class="mt-3">
+    <b>Current Skills:</b><br>
     {% for s in job.skills_required.split(",") %}
-      <span class="badge bg-primary me-1">
+      <span class="badge bg-primary me-1 mt-1">
         {{s}}
-        <a href="/delete-skill/{{s}}" style="color:white; text-decoration:none;"> × </a>
+        <a href="/delete-skill/{{s}}" 
+           style="color:white; text-decoration:none; margin-left:5px;">
+           ×
+        </a>
       </span>
     {% endfor %}
   </div>
   {% endif %}
 </div>
 
-<!-- 🔹 Actions -->
+<!-- 🔹 Action Buttons -->
 <div class="d-flex gap-2 mb-3">
   <a class="btn btn-outline-primary btn-sm" href="/admin">All</a>
   <a class="btn btn-outline-success btn-sm" href="/admin?filter=shortlisted">Shortlisted</a>
@@ -39,7 +43,7 @@
 
 <hr>
 
-<!-- 🔹 Candidate List -->
+<!-- 🔹 Candidate Cards -->
 {% for r in resumes %}
 <div class="card shadow-sm p-3 mb-3">
 
@@ -52,20 +56,22 @@
     </span>
   </div>
 
-  <!-- Email -->
-  <p class="mt-2 mb-1">
-    <b>Email:</b>
+  <!-- Candidate Info -->
+  <div class="mt-2">
     {% for u in users %}
       {% if u.id == r.user_id %}
-        {{u.username}}
+        <p class="mb-1"><b>Name:</b> {{u.name}}</p>
+        <p class="mb-1"><b>Email:</b> {{u.email}}</p>
       {% endif %}
     {% endfor %}
-  </p>
+  </div>
 
   <!-- Buttons -->
-  <div class="mt-2 d-flex gap-2">
-    <a href="/view-resume/{{r.id}}" target="_blank" class="btn btn-dark btn-sm">
-      View Resume
+  <div class="mt-3 d-flex gap-2">
+    <a href="/view-resume/{{r.id}}" 
+       target="_blank" 
+       class="btn btn-dark btn-sm">
+       View Resume
     </a>
 
     <a href="/delete-resume/{{r.id}}" 

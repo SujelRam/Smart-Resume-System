@@ -18,7 +18,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100))
+    name = db.Column(db.String(100))
+    email = db.Column(db.String(100))
     password = db.Column(db.String(100))
     role = db.Column(db.String(10))
 
@@ -42,18 +43,23 @@ class Job(db.Model):
 with app.app_context():
     db.create_all()
 
-    if not User.query.filter_by(username="admin").first():
-        db.session.add(User(username="admin", password="admin", role="admin"))
+    if not User.query.filter_by(email="admin@gmail.com").first():
+        db.session.add(User(
+            name="Admin",
+            email="admin@gmail.com",
+            password="admin",
+            role="admin"
+        ))
         db.session.commit()
 
 
-# ---------- AUTH ---------- #
+# ---------- LOGIN ---------- #
 
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         user = User.query.filter_by(
-            username=request.form["username"],
+            email=request.form["email"],
             password=request.form["password"]
         ).first()
 
@@ -68,11 +74,14 @@ def login():
     return render_template("login.html")
 
 
+# ---------- REGISTER ---------- #
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         user = User(
-            username=request.form["username"],
+            name=request.form["name"],
+            email=request.form["email"],
             password=request.form["password"],
             role="user"
         )
@@ -83,7 +92,7 @@ def register():
     return render_template("register.html")
 
 
-# ---------- USER ---------- #
+# ---------- USER DASHBOARD ---------- #
 
 @app.route("/user", methods=["GET", "POST"])
 def user_dashboard():
@@ -112,7 +121,7 @@ def user_dashboard():
     return render_template("user_dashboard.html", resumes=resumes)
 
 
-# ---------- ADMIN ---------- #
+# ---------- ADMIN DASHBOARD ---------- #
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
@@ -133,7 +142,7 @@ def admin():
 
         db.session.commit()
 
-    # update matching
+    # Update matching
     resumes_all = Resume.query.all()
     for r in resumes_all:
         skills = r.skills.split(",")
@@ -169,7 +178,7 @@ def delete_resume(id):
     return redirect("/admin")
 
 
-# ---------- DELETE ALL 🔥 ---------- #
+# ---------- DELETE ALL ---------- #
 
 @app.route("/delete-all")
 def delete_all():
@@ -191,6 +200,20 @@ def delete_all():
 def view_resume(id):
     resume = Resume.query.get(id)
     return send_file(resume.file)
+
+
+# ---------- DELETE SKILL ---------- #
+
+@app.route("/delete-skill/<skill>")
+def delete_skill(skill):
+    job = Job.query.first()
+    skills = job.skills_required.split(",")
+
+    skills = [s for s in skills if s != skill]
+    job.skills_required = ",".join(skills)
+
+    db.session.commit()
+    return redirect("/admin")
 
 
 # ---------- LOGIC ---------- #
