@@ -61,7 +61,11 @@
     {% for u in users %}
       {% if u.id == r.user_id %}
         <p class="mb-1"><b>Name:</b> {{u.name}}</p>
-        <p class="mb-1"><b>Email:</b> {{u.email}}</p>
+        <p><b>Email:</b> 
+            <a href="mailto:{{u.email}}" class="text-primary">
+               {{u.email}}
+            </a>
+        </p>
       {% endif %}
     {% endfor %}
   </div>
