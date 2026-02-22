@@ -6,6 +6,10 @@ import PyPDF2
 app = Flask(__name__)
 app.secret_key = "secret123"
 
+# 🔥 ADD THESE LINES (IMPORTANT FOR RENDER)
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
 
@@ -96,6 +100,9 @@ def register():
 
 @app.route("/user", methods=["GET", "POST"])
 def user_dashboard():
+    if "user_id" not in session:
+        return redirect("/")
+    
     if request.method == "POST":
         file = request.files["resume"]
         path = os.path.join(UPLOAD_FOLDER, file.filename)
@@ -125,6 +132,9 @@ def user_dashboard():
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
+    if "user_id" not in session or session.get("role") != "admin":
+        return redirect("/")
+    
     filter_type = request.args.get("filter")
 
     if request.method == "POST":
