@@ -153,40 +153,44 @@ def admin():
     return render_template("admin.html", resumes=resumes, users=users, job=job)
 
 
-@app.route("/delete-skill/<skill>")
-def delete_skill(skill):
-    job = Job.query.first()
-    skills = job.skills_required.split(",")
+# ---------- DELETE SINGLE ---------- #
 
-    skills = [s for s in skills if s != skill]
-    job.skills_required = ",".join(skills)
+@app.route("/delete-resume/<int:id>")
+def delete_resume(id):
+    resume = Resume.query.get(id)
 
-    db.session.commit()
+    if resume:
+        if os.path.exists(resume.file):
+            os.remove(resume.file)
+
+        db.session.delete(resume)
+        db.session.commit()
+
     return redirect("/admin")
 
+
+# ---------- DELETE ALL 🔥 ---------- #
+
+@app.route("/delete-all")
+def delete_all():
+    resumes = Resume.query.all()
+
+    for r in resumes:
+        if os.path.exists(r.file):
+            os.remove(r.file)
+
+    Resume.query.delete()
+    db.session.commit()
+
+    return redirect("/admin")
+
+
+# ---------- VIEW RESUME ---------- #
 
 @app.route("/view-resume/<int:id>")
 def view_resume(id):
     resume = Resume.query.get(id)
     return send_file(resume.file)
-
-
-@app.route("/delete-resume/<int:id>")
-def delete_resume(id):
-    # only admin should be able to delete
-    if session.get("role") != "admin":
-        return redirect("/")
-
-    resume = Resume.query.get(id)
-    if resume:
-        try:
-            if resume.file and os.path.exists(resume.file):
-                os.remove(resume.file)
-        except Exception:
-            pass
-        db.session.delete(resume)
-        db.session.commit()
-    return redirect("/admin")
 
 
 # ---------- LOGIC ---------- #
