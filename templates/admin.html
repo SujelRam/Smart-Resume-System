@@ -45,7 +45,7 @@
           {% if s.strip() %}
           <span class="badge-skill">
             {{ s.strip() }}
-            <a href="/delete-skill/{{ s.strip() }}" style="color: var(--primary-color); text-decoration: none;" onclick="return confirmDelete('Remove this skill?');">
+            <a href="/delete-skill/{{ s.strip()|urlencode }}" style="color: var(--primary-color); text-decoration: none;" onclick="return confirmDelete('Remove this skill?');">
               <i class="bi bi-x"></i>
             </a>
           </span>
@@ -112,7 +112,7 @@
           {% endif %}
           
           <!-- Score -->
-          {% if r.score %}
+          {% if r.score is not none %}
           <div class="mb-3">
             <p class="small fw-medium mb-1" style="color: var(--text-muted);">
               <i class="bi bi-graph-up me-1"></i> Match Score:
