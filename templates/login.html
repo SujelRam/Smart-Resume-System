@@ -1,17 +1,57 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="card shadow mx-auto p-4" style="max-width:400px">
-<h3 class="text-center">Sign In</h3>
+<div class="row justify-content-center align-items-center min-vh-75">
+  <div class="col-md-5 col-lg-4">
+    <div class="card-custom p-4 fade-in">
+      <div class="text-center mb-4">
+        <div class="mb-3">
+          <i class="bi bi-briefcase-fill" style="font-size: 3rem; color: var(--primary-color);"></i>
+        </div>
+        <h3 class="fw-bold" style="color: var(--text-dark);">Welcome back</h3>
+        <p class="text-muted">Sign in to continue to SmartHire</p>
+      </div>
 
-<form method="POST">
-  <input class="form-control mb-3" name="email" placeholder="Enter email">
-  <input class="form-control mb-3" type="password" name="password" placeholder="Password">
-  <button class="btn btn-primary w-100">Login</button>
-</form>
+      <form method="POST">
+        <div class="mb-3">
+          <label class="form-label fw-medium" style="color: var(--text-dark);">Email</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+              <i class="bi bi-envelope"></i>
+            </span>
+            <input type="email" class="form-control form-control-custom border-start-0" name="email" placeholder="Enter your email" required>
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label fw-medium" style="color: var(--text-dark);">Password</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+              <i class="bi bi-lock"></i>
+            </span>
+            <input type="password" class="form-control form-control-custom border-start-0" name="password" placeholder="Enter your password" required>
+          </div>
+        </div>
 
-<a href="/register" class="text-center d-block mt-2">Create account</a>
+        <button type="submit" class="btn btn-primary-custom w-100 mb-3">
+          <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
+        </button>
+      </form>
 
+      <hr class="my-4">
+      
+      <p class="text-center text-muted mb-0">
+        Don't have an account?
+        <a href="/register" class="text-decoration-none fw-medium" style="color: var(--primary-color);">Join SmartHire</a>
+      </p>
+    </div>
+    
+    <div class="text-center mt-4">
+      <small class="text-muted">
+        <i class="bi bi-info-circle me-1"></i> Demo: admin@gmail.com / admin
+      </small>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

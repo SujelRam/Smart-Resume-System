@@ -6,9 +6,9 @@ import PyPDF2
 app = Flask(__name__)
 app.secret_key = "secret123"
 
-# 🔥 ADD THESE LINES (IMPORTANT FOR RENDER)
-app.config['SESSION_COOKIE_SECURE'] = True
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+# Session configuration (remove for development, keep for production)
+# app.config['SESSION_COOKIE_SECURE'] = True
+# app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
@@ -245,10 +245,13 @@ def extract_skills(text):
 def calculate_score(resume_skills):
     job = Job.query.first()
 
-    if not job:
+    if not job or not job.skills_required:
         return 0, "Pending"
 
-    job_skills = [s.strip() for s in job.skills_required.split(",")]
+    job_skills = [s.strip() for s in job.skills_required.split(",") if s.strip()]
+    
+    if not job_skills:
+        return 0, "Pending"
 
     match = set(resume_skills) & set(job_skills)
     score = int((len(match) / len(job_skills)) * 100)
@@ -256,6 +259,14 @@ def calculate_score(resume_skills):
     if len(match) >= 1:
         return score, "Matched"
     return score, "Not Matched"
+
+
+# ---------- LOGOUT ---------- #
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
 
 
 # ---------- RUN ---------- #
